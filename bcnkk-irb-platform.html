@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCNKK IRB · Online Ethics Submission & Tracking</title>
+  <meta name="description" content="ระบบจริยธรรมการวิจัยในมนุษย์ออนไลน์ — วิทยาลัยพยาบาลบรมราชชนนี ขอนแก่น" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f7f3ea;
+      font-family: 'IBM Plex Sans Thai', 'IBM Plex Sans', system-ui, sans-serif;
+      color: #18211f;
+    }
+
+    /* Smooth font rendering */
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* Loading screen until React mounts */
+    #boot {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 18px;
+      background: #f7f3ea;
+      transition: opacity 0.4s ease;
+      z-index: 999;
+    }
+    #boot.fade { opacity: 0; pointer-events: none; }
+
+    .boot-mark {
+      width: 56px; height: 56px;
+      border-radius: 12px;
+      background: #0f4c4a;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 30px -12px rgba(15,76,74,0.4);
+      position: relative;
+    }
+    .boot-mark::after {
+      content: ''; position: absolute; bottom: -3px; right: -3px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #b48a3c;
+      box-shadow: 0 0 0 3px #f7f3ea;
+    }
+    .boot-mark svg { color: #f3e7c8; }
+    .boot-text {
+      font-family: 'Fraunces', serif;
+      font-size: 14px; color: #6b7672;
+      letter-spacing: 0.02em;
+    }
+    .boot-text b { color: #0f4c4a; font-weight: 600; }
+    .boot-spinner {
+      width: 24px; height: 24px;
+      border: 2.5px solid #efe9da;
+      border-top-color: #0f4c4a;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <!-- Boot screen -->
+  <div id="boot">
+    <div class="boot-mark">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 2v2"/><path d="M5 2v2"/><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/>
+      </svg>
+    </div>
+    <div class="boot-spinner"></div>
+    <div class="boot-text">กำลังโหลดระบบ <b>BCNKK · IRB</b></div>
+  </div>
+
+  <div id="root"></div>
+
+  <!-- Import map: maps bare module specifiers to ESM CDN URLs -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+      "lucide-react": "https://esm.sh/lucide-react@0.383.0?deps=react@18.3.1"
+    }
+  }
+  </script>
+
+  <!-- Babel Standalone — transpiles JSX in the browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- App code: written as a Babel-transpiled ES module -->
+  <script type="text/babel" data-type="module" data-presets="env,react">
+import React, { useState, useEffect, useMemo } from 'react';
+import { createRoot } from 'react-dom/client';
+import { FileText, Upload, Send, Clock, CheckCircle2, XCircle, AlertCircle, User, Users, ShieldCheck, Mail, Bell, Search, Filter, ChevronRight, Calendar, Download, Eye, Edit3, MessageSquare, Award, TrendingUp, Plus, Paperclip, ArrowLeft, ArrowRight, Inbox, Archive, BookOpen, Stethoscope, ClipboardCheck, FilePlus, Activity, Hash, Building2, Sparkles, ChevronDown, X, Check, AlertTriangle, FileCheck2, UserPlus, ListChecks, BarChart3, GraduationCap, ScrollText } from 'lucide-react';
+
+import {
+  FileText, Upload, Send, Clock, CheckCircle2, XCircle, AlertCircle,
+  User, Users, ShieldCheck, Mail, Bell, Search, Filter, ChevronRight,
+  Calendar, Download, Eye, Edit3, MessageSquare, Award, TrendingUp,
+  Plus, Paperclip, ArrowLeft, ArrowRight, Inbox, Archive, BookOpen,
+  Stethoscope, ClipboardCheck, FilePlus, Activity, Hash, Building2,
+  Sparkles, ChevronDown, X, Check, AlertTriangle, FileCheck2,
+  UserPlus, ListChecks, BarChart3, GraduationCap, ScrollText
+} from "lucide-react";
+
+// ─────────────────────────────────────────────────────────────
+//  BCNKK IRB — Online Ethics Submission & Tracking Platform
+//  วิทยาลัยพยาบาลบรมราชชนนี ขอนแก่น
+//  Prototype by Claude · For ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย
+// ─────────────────────────────────────────────────────────────
+
+// ---------- DESIGN TOKENS ----------
+const css = `
+:root {
+  --ink: #18211f;
+  --ink-soft: #3b4543;
+  --ink-mute: #6b7672;
+  --paper: #f7f3ea;
+  --paper-deep: #efe9da;
+  --card: #ffffff;
+  --line: #e6dfcd;
+  --line-soft: #f0eadb;
+  --teal: #0f4c4a;
+  --teal-deep: #0a3735;
+  --teal-soft: #d6e7e4;
+  --gold: #b48a3c;
+  --gold-soft: #f3e7c8;
+  --terra: #b3553a;
+  --terra-soft: #f5dfd2;
+  --moss: #5a7a48;
+  --moss-soft: #dde8d1;
+  --plum: #6b3a5c;
+  --plum-soft: #ead7e3;
+}
+
+* { box-sizing: border-box; }
+body, html, #root { background: var(--paper); }
+
+.font-display { font-family: 'Fraunces', 'IBM Plex Sans Thai', Georgia, serif; font-feature-settings: 'ss01', 'ss02'; letter-spacing: -0.01em; }
+.font-body { font-family: 'IBM Plex Sans Thai', 'IBM Plex Sans', system-ui, sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+.paper-grain {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(180,138,60,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(15,76,74,0.04) 0%, transparent 50%);
+}
+
+.deco-rule {
+  background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
+  background-size: 4px 1px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+  height: 1px;
+}
+
+.shadow-paper { box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 8px 24px -12px rgba(15,76,74,0.12); }
+.shadow-paper-deep { box-shadow: 0 2px 0 rgba(0,0,0,0.03), 0 20px 40px -20px rgba(15,76,74,0.18); }
+
+.border-dotted-thai { border-style: dashed; border-color: var(--line); }
+
+@keyframes slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.animate-slide { animation: slide-up 0.4s ease-out; }
+
+@keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+`;
+
+// ---------- SAMPLE DATA ----------
+const seedReviewers = [
+  { id: "R01", name: "รศ.ดร.สมศรี วิจัยดี", expertise: ["Maternal Health", "Qualitative"], email: "somsri@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลมารดาและทารก", load: 2 },
+  { id: "R02", name: "ผศ.ดร.วิชัย ตรวจสอบ", expertise: ["Clinical Trials", "Biostatistics"], email: "wichai@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลผู้ใหญ่", load: 1 },
+  { id: "R03", name: "อ.ดร.มาลี จริยธรรม", expertise: ["Vulnerable Population", "IPV"], email: "malee@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลครอบครัวและชุมชน", load: 3 },
+  { id: "R04", name: "ผศ.ดร.ประภาส คุ้มครอง", expertise: ["Pediatric", "Mental Health"], email: "prapas@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลเด็ก", load: 0 },
+  { id: "R05", name: "อ.ดร.ภัทรา ระเบียบ", expertise: ["Health Policy", "Mixed Methods"], email: "pattra@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลพื้นฐาน", load: 1 },
+];
+
+const seedSubmissions = [
+  {
+    id: "BCNKK-IRB-2569-014",
+    title: "การพัฒนาโปรแกรมการดูแลตนเองตามแบบแผนความเชื่อด้านสุขภาพในหญิงตั้งครรภ์เสี่ยงคลอดก่อนกำหนด",
+    titleEn: "Development of a Health Belief Model–Based Self-Care Program for Pregnant Women at Risk of Preterm Labor",
+    pi: "ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย",
+    piEmail: "tipparat@bcnkk.ac.th",
+    dept: "ภาควิชาการพยาบาลมารดาและทารก",
+    type: "Full Board Review",
+    risk: "Greater than minimal risk",
+    participants: "หญิงตั้งครรภ์เสี่ยงคลอดก่อนกำหนด อายุครรภ์ 24–36 สัปดาห์ จำนวน 60 ราย",
+    status: "under_review",
+    submittedAt: "2569-04-12",
+    fee: 3000,
+    documents: [
+      { name: "Protocol_v2.pdf", type: "โครงร่างวิจัย", size: "2.4 MB", version: 2 },
+      { name: "ConsentForm_TH.pdf", type: "ใบยินยอม", size: "0.8 MB", version: 2 },
+      { name: "Questionnaire_HBM.pdf", type: "เครื่องมือวิจัย", size: "1.1 MB", version: 1 },
+      { name: "PI_CV.pdf", type: "CV ผู้วิจัยหลัก", size: "0.6 MB", version: 1 },
+    ],
+    reviewers: [
+      { id: "R01", status: "completed", recommendation: "approve_with_revisions", date: "2569-04-25" },
+      { id: "R03", status: "in_progress", recommendation: null, date: null },
+      { id: "R02", status: "pending", recommendation: null, date: null },
+    ],
+    timeline: [
+      { date: "2569-04-12", event: "ส่งโครงการเข้าระบบ", actor: "ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย", icon: "send" },
+      { date: "2569-04-13", event: "เลขา IRB คัดกรองเบื้องต้น (Pre-screening)", actor: "นางสาวกัลยา เลขานุการ", icon: "check" },
+      { date: "2569-04-15", event: "Assigned ให้กรรมการ 3 ท่าน", actor: "นางสาวกัลยา เลขานุการ", icon: "users" },
+      { date: "2569-04-25", event: "กรรมการท่านที่ 1 ส่งความเห็น (Approve with revisions)", actor: "รศ.ดร.สมศรี วิจัยดี", icon: "review" },
+    ],
+  },
+  {
+    id: "BCNKK-IRB-2569-015",
+    title: "การปรับใช้แบบประเมินความรุนแรงในคู่รักฉบับวัฒนธรรมไทย",
+    titleEn: "Cultural Adaptation of the Danger Assessment for Thai Women",
+    pi: "อ.ดร.สุนีย์ พัฒนา",
+    piEmail: "sunee@bcnkk.ac.th",
+    dept: "ภาควิชาการพยาบาลครอบครัวและชุมชน",
+    type: "Full Board Review",
+    risk: "Greater than minimal risk",
+    participants: "ผู้หญิงไทยที่เคยประสบความรุนแรงในคู่รัก จำนวน 30 ราย",
+    status: "awaiting_assignment",
+    submittedAt: "2569-05-02",
+    fee: 3000,
+    documents: [
+      { name: "Protocol_v1.pdf", type: "โครงร่างวิจัย", size: "1.9 MB", version: 1 },
+      { name: "DA_Thai_v1.pdf", type: "เครื่องมือวิจัย", size: "0.5 MB", version: 1 },
+      { name: "ConsentForm.pdf", type: "ใบยินยอม", size: "0.7 MB", version: 1 },
+    ],
+    reviewers: [],
+    timeline: [
+      { date: "2569-05-02", event: "ส่งโครงการเข้าระบบ", actor: "อ.ดร.สุนีย์ พัฒนา", icon: "send" },
+      { date: "2569-05-03", event: "ผ่านการคัดกรองเบื้องต้น — รอ assign กรรมการ", actor: "นางสาวกัลยา เลขานุการ", icon: "check" },
+    ],
+  },
+  {
+    id: "BCNKK-IRB-2569-013",
+    title: "ผลของโปรแกรมส่งเสริมสุขภาพจิตในนักศึกษาพยาบาล",
+    titleEn: "Effect of a Mental Health Promotion Program among Nursing Students",
+    pi: "อ.อารยา ส่งเสริม",
+    piEmail: "araya@bcnkk.ac.th",
+    dept: "ภาควิชาการพยาบาลสุขภาพจิต",
+    type: "Expedited Review",
+    risk: "Minimal risk",
+    participants: "นักศึกษาพยาบาลชั้นปีที่ 2 จำนวน 80 ราย",
+    status: "approved",
+    submittedAt: "2569-03-10",
+    approvalNumber: "BCNKK-IRB 045/2569",
+    approvalDate: "2569-04-08",
+    expirationDate: "2570-04-07",
+    fee: 1500,
+    documents: [
+      { name: "Protocol_v3_final.pdf", type: "โครงร่างวิจัย", size: "2.1 MB", version: 3 },
+      { name: "Approval_Certificate.pdf", type: "ใบรับรอง", size: "0.3 MB", version: 1 },
+    ],
+    reviewers: [
+      { id: "R04", status: "completed", recommendation: "approve", date: "2569-03-28" },
+      { id: "R05", status: "completed", recommendation: "approve_with_revisions", date: "2569-03-30" },
+    ],
+    timeline: [
+      { date: "2569-03-10", event: "ส่งโครงการเข้าระบบ", actor: "อ.อารยา ส่งเสริม", icon: "send" },
+      { date: "2569-03-12", event: "ผ่านการคัดกรอง — Expedited review", actor: "นางสาวกัลยา เลขานุการ", icon: "check" },
+      { date: "2569-03-30", event: "กรรมการครบ — ขอแก้ไขเล็กน้อย", actor: "ระบบ", icon: "review" },
+      { date: "2569-04-05", event: "ผู้วิจัยส่งฉบับแก้ไข v3", actor: "อ.อารยา ส่งเสริม", icon: "edit" },
+      { date: "2569-04-08", event: "ประธานอนุมัติ — ออกเลขที่ BCNKK-IRB 045/2569", actor: "ศ.ดร.ประชา ประธาน", icon: "approved" },
+    ],
+  },
+  {
+    id: "BCNKK-IRB-2569-012",
+    title: "การพัฒนาแอปพลิเคชัน WeSafe เพื่อการป้องกันความรุนแรง",
+    titleEn: "Development of WeSafe App for Violence Prevention",
+    pi: "ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย",
+    piEmail: "tipparat@bcnkk.ac.th",
+    dept: "ภาควิชาการพยาบาลครอบครัวและชุมชน",
+    type: "Full Board Review",
+    risk: "Greater than minimal risk",
+    participants: "ผู้หญิงที่มีประสบการณ์ความรุนแรงในคู่รัก จำนวน 240 ราย (RCT)",
+    status: "revision_required",
+    submittedAt: "2569-02-20",
+    fee: 3000,
+    documents: [
+      { name: "Protocol_v1.pdf", type: "โครงร่างวิจัย", size: "3.2 MB", version: 1 },
+      { name: "ReviewerComments_consolidated.pdf", type: "ความเห็นกรรมการ", size: "0.9 MB", version: 1 },
+    ],
+    reviewers: [
+      { id: "R01", status: "completed", recommendation: "major_revisions", date: "2569-03-15" },
+      { id: "R02", status: "completed", recommendation: "approve_with_revisions", date: "2569-03-18" },
+      { id: "R03", status: "completed", recommendation: "major_revisions", date: "2569-03-20" },
+    ],
+    timeline: [
+      { date: "2569-02-20", event: "ส่งโครงการเข้าระบบ", actor: "ผศ.ดร.ทิพย์รัตน์", icon: "send" },
+      { date: "2569-02-22", event: "Pre-screening ผ่าน", actor: "นางสาวกัลยา", icon: "check" },
+      { date: "2569-02-25", event: "Assigned 3 reviewers", actor: "นางสาวกัลยา", icon: "users" },
+      { date: "2569-03-20", event: "กรรมการครบ — ขอแก้ไขมาก (Major revisions)", actor: "ระบบ", icon: "warning" },
+      { date: "2569-03-22", event: "แจ้งผู้วิจัย รอการแก้ไข", actor: "ระบบ", icon: "mail" },
+    ],
+  },
+];
+
+const seedEmails = [
+  {
+    id: 1, ts: "2569-05-02 14:32", from: "irb@bcnkk.ac.th", to: "sunee@bcnkk.ac.th",
+    cc: "irb-secretary@bcnkk.ac.th",
+    subject: "[BCNKK-IRB] ✓ ได้รับโครงการ BCNKK-IRB-2569-015 แล้ว",
+    type: "submission_received", submissionId: "BCNKK-IRB-2569-015",
+    body: `เรียน อ.ดร.สุนีย์ พัฒนา\n\nคณะกรรมการจริยธรรมการวิจัยในมนุษย์ วิทยาลัยพยาบาลบรมราชชนนี ขอนแก่น ได้รับโครงการของท่านเรียบร้อยแล้ว\n\n  เลขที่: BCNKK-IRB-2569-015\n  ชื่อโครงการ: การปรับใช้แบบประเมินความรุนแรงในคู่รักฉบับวัฒนธรรมไทย\n  วันที่ส่ง: 2 พฤษภาคม 2569\n  สถานะปัจจุบัน: รอคัดกรองเบื้องต้น (Pre-screening)\n\nท่านสามารถติดตามสถานะได้ที่: https://irb.bcnkk.ac.th/track/BCNKK-IRB-2569-015\n\nคาดว่าจะแจ้งผลภายใน 30–45 วันทำการ\n\nด้วยความเคารพ\nสำนักงาน IRB วพบ.ขอนแก่น`,
+  },
+  {
+    id: 2, ts: "2569-04-15 09:15", from: "irb@bcnkk.ac.th", to: "somsri@bcnkk.ac.th",
+    subject: "[BCNKK-IRB] 📋 มอบหมายงานพิจารณา — BCNKK-IRB-2569-014",
+    type: "reviewer_assigned", submissionId: "BCNKK-IRB-2569-014",
+    body: `เรียน รศ.ดร.สมศรี วิจัยดี\n\nคณะกรรมการ IRB ขอมอบหมายให้ท่านพิจารณาโครงการต่อไปนี้\n\n  เลขที่: BCNKK-IRB-2569-014\n  ชื่อ: การพัฒนาโปรแกรมการดูแลตนเองตามแบบแผนความเชื่อด้านสุขภาพ...\n  ผู้วิจัยหลัก: ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย\n  ประเภท: Full Board Review\n  กำหนดส่งความเห็น: ภายใน 14 วัน (2569-04-29)\n\nกรุณา login เข้าสู่ระบบเพื่อดาวน์โหลดเอกสารและส่งแบบฟอร์มการพิจารณา\n  https://irb.bcnkk.ac.th/reviewer/BCNKK-IRB-2569-014\n\nขอบพระคุณท่านอย่างสูง\nสำนักงาน IRB วพบ.ขอนแก่น`,
+  },
+  {
+    id: 3, ts: "2569-04-25 16:48", from: "irb@bcnkk.ac.th", to: "irb-secretary@bcnkk.ac.th",
+    subject: "[BCNKK-IRB] ✍️ กรรมการส่งความเห็นแล้ว — BCNKK-IRB-2569-014",
+    type: "review_completed", submissionId: "BCNKK-IRB-2569-014",
+    body: `เรียน เลขานุการ IRB\n\nรศ.ดร.สมศรี วิจัยดี ได้ส่งความเห็นพิจารณาโครงการ BCNKK-IRB-2569-014 แล้ว\n\nคำแนะนำ: Approve with revisions (ขอแก้ไขเล็กน้อย)\n\nสถานะกรรมการอื่น:\n  • ผศ.ดร.วิชัย — pending\n  • อ.ดร.มาลี — in progress\n\nกรุณาติดตามและแจ้งเตือนกรรมการที่ค้าง`,
+  },
+  {
+    id: 4, ts: "2569-04-08 10:00", from: "irb@bcnkk.ac.th", to: "araya@bcnkk.ac.th",
+    subject: "[BCNKK-IRB] 🎉 อนุมัติโครงการแล้ว — BCNKK-IRB 045/2569",
+    type: "approved", submissionId: "BCNKK-IRB-2569-013",
+    body: `เรียน อ.อารยา ส่งเสริม\n\nคณะกรรมการ IRB วพบ.ขอนแก่น ขออนุมัติโครงการของท่าน\n\n  เลขที่รับรอง: BCNKK-IRB 045/2569\n  วันที่อนุมัติ: 8 เมษายน 2569\n  วันหมดอายุ: 7 เมษายน 2570\n\nใบรับรองและเอกสารประกอบสามารถดาวน์โหลดได้จากระบบ\n\nหมายเหตุสำคัญ:\n  • ต้องรายงานความก้าวหน้า (Progress Report) ทุก 6 เดือน\n  • ต้องรายงานเหตุการณ์ไม่พึงประสงค์ (AE) ภายใน 7 วัน\n  • หากต้องการขยายเวลาต้องส่งคำขอก่อนหมดอายุ 30 วัน\n\nขอแสดงความยินดี\nสำนักงาน IRB วพบ.ขอนแก่น`,
+  },
+  {
+    id: 5, ts: "2569-03-22 11:20", from: "irb@bcnkk.ac.th", to: "tipparat@bcnkk.ac.th",
+    subject: "[BCNKK-IRB] ⚠️ ขอให้แก้ไข — BCNKK-IRB-2569-012",
+    type: "revision_required", submissionId: "BCNKK-IRB-2569-012",
+    body: `เรียน ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย\n\nกรรมการ IRB ทั้ง 3 ท่านได้พิจารณาโครงการของท่านครบแล้ว\n\nสรุปผล: ขอให้แก้ไขสาระสำคัญ (Major revisions) ก่อนพิจารณาใหม่\n\nประเด็นหลัก:\n  1. ขั้นตอนการป้องกันอันตรายต่อผู้เข้าร่วม (Safety protocol)\n  2. การจัดการข้อมูลและความเป็นส่วนตัว\n  3. ใบยินยอมยังขาดข้อความเรื่องสิทธิถอนตัว\n\nกรุณาส่งฉบับแก้ไขพร้อม Response-to-Reviewers ภายใน 60 วัน\n\nรายละเอียดความเห็นเต็มอยู่ในระบบ:\n  https://irb.bcnkk.ac.th/track/BCNKK-IRB-2569-012`,
+  },
+];
+
+// ---------- HELPERS ----------
+const STATUS_META = {
+  draft: { label: "ฉบับร่าง", labelEn: "Draft", color: "bg-stone-100 text-stone-700 border-stone-300", dot: "bg-stone-400" },
+  submitted: { label: "ส่งแล้ว", labelEn: "Submitted", color: "bg-sky-50 text-sky-800 border-sky-200", dot: "bg-sky-500" },
+  screening: { label: "คัดกรอง", labelEn: "Screening", color: "bg-amber-50 text-amber-800 border-amber-200", dot: "bg-amber-500" },
+  awaiting_assignment: { label: "รอ assign", labelEn: "Awaiting assignment", color: "bg-amber-50 text-amber-800 border-amber-200", dot: "bg-amber-500" },
+  under_review: { label: "อยู่ระหว่างพิจารณา", labelEn: "Under review", color: "bg-violet-50 text-violet-800 border-violet-200", dot: "bg-violet-500" },
+  revision_required: { label: "ต้องแก้ไข", labelEn: "Revision required", color: "bg-orange-50 text-orange-800 border-orange-200", dot: "bg-orange-500" },
+  approved: { label: "อนุมัติ", labelEn: "Approved", color: "bg-emerald-50 text-emerald-800 border-emerald-200", dot: "bg-emerald-600" },
+  rejected: { label: "ไม่อนุมัติ", labelEn: "Rejected", color: "bg-rose-50 text-rose-800 border-rose-200", dot: "bg-rose-600" },
+  expired: { label: "หมดอายุ", labelEn: "Expired", color: "bg-stone-100 text-stone-600 border-stone-300", dot: "bg-stone-500" },
+};
+
+const REC_META = {
+  approve: { label: "อนุมัติ", color: "text-emerald-700 bg-emerald-50" },
+  approve_with_revisions: { label: "อนุมัติ–แก้ไขเล็กน้อย", color: "text-amber-700 bg-amber-50" },
+  major_revisions: { label: "แก้ไขมาก", color: "text-orange-700 bg-orange-50" },
+  reject: { label: "ไม่อนุมัติ", color: "text-rose-700 bg-rose-50" },
+};
+
+const ICON_MAP = {
+  send: Send, check: CheckCircle2, users: Users, review: ClipboardCheck,
+  edit: Edit3, approved: Award, warning: AlertTriangle, mail: Mail,
+};
+
+// ---------- ATOMIC UI ----------
+function Badge({ children, color = "stone", size = "sm" }) {
+  const palettes = {
+    stone: "bg-stone-100 text-stone-700 border-stone-200",
+    teal: "bg-[var(--teal-soft)] text-[var(--teal-deep)] border-[var(--teal)]/20",
+    gold: "bg-[var(--gold-soft)] text-[var(--gold)] border-[var(--gold)]/30",
+    moss: "bg-[var(--moss-soft)] text-[var(--moss)] border-[var(--moss)]/30",
+    terra: "bg-[var(--terra-soft)] text-[var(--terra)] border-[var(--terra)]/30",
+    plum: "bg-[var(--plum-soft)] text-[var(--plum)] border-[var(--plum)]/30",
+  };
+  const sizes = size === "sm" ? "text-[10.5px] px-2 py-0.5" : "text-xs px-2.5 py-1";
+  return <span className={`inline-flex items-center gap-1 ${sizes} rounded-full border font-medium tracking-wide ${palettes[color] || palettes.stone}`}>{children}</span>;
+}
+
+function StatusPill({ status }) {
+  const m = STATUS_META[status] || STATUS_META.submitted;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${m.color}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${m.dot}`} />
+      {m.label}
+    </span>
+  );
+}
+
+function Btn({ children, onClick, variant = "primary", size = "md", icon: Icon, type = "button", disabled = false, className = "" }) {
+  const base = "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed";
+  const sizes = { sm: "px-3 py-1.5 text-[12.5px]", md: "px-4 py-2 text-sm", lg: "px-5 py-2.5 text-[15px]" };
+  const variants = {
+    primary: "bg-[var(--teal)] text-white hover:bg-[var(--teal-deep)] shadow-sm",
+    gold: "bg-[var(--gold)] text-white hover:opacity-90 shadow-sm",
+    ghost: "text-[var(--ink)] hover:bg-[var(--paper-deep)]",
+    outline: "border border-[var(--line)] bg-white text-[var(--ink)] hover:border-[var(--teal)]/40 hover:bg-[var(--teal-soft)]/30",
+    danger: "bg-rose-600 text-white hover:bg-rose-700 shadow-sm",
+    soft: "bg-[var(--paper-deep)] text-[var(--ink)] hover:bg-[var(--line)]",
+  };
+  return (
+    <button type={type} onClick={onClick} disabled={disabled} className={`${base} ${sizes[size]} ${variants[variant]} ${className}`}>
+      {Icon && <Icon size={size === "sm" ? 14 : 16} strokeWidth={2} />}
+      {children}
+    </button>
+  );
+}
+
+function Field({ label, sublabel, required, children }) {
+  return (
+    <div className="space-y-1.5">
+      <label className="block text-[12.5px] font-semibold text-[var(--ink)] tracking-wide">
+        {label} {required && <span className="text-[var(--terra)]">*</span>}
+        {sublabel && <span className="ml-2 text-[11px] font-normal text-[var(--ink-mute)]">{sublabel}</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function Input({ ...props }) {
+  return <input {...props} className={`w-full rounded-md border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-mute)]/60 focus:border-[var(--teal)] focus:outline-none focus:ring-2 focus:ring-[var(--teal)]/15 transition ${props.className || ""}`} />;
+}
+
+function Textarea({ ...props }) {
+  return <textarea {...props} className={`w-full rounded-md border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--ink)] placeholder:text-[var(--ink-mute)]/60 focus:border-[var(--teal)] focus:outline-none focus:ring-2 focus:ring-[var(--teal)]/15 transition ${props.className || ""}`} />;
+}
+
+function Select({ children, ...props }) {
+  return <select {...props} className={`w-full rounded-md border border-[var(--line)] bg-white px-3 py-2 text-sm text-[var(--ink)] focus:border-[var(--teal)] focus:outline-none focus:ring-2 focus:ring-[var(--teal)]/15 transition ${props.className || ""}`}>{children}</select>;
+}
+
+function Card({ children, className = "", padded = true }) {
+  return <div className={`rounded-lg border border-[var(--line)] bg-[var(--card)] shadow-paper ${padded ? "p-5" : ""} ${className}`}>{children}</div>;
+}
+
+function SectionTitle({ eyebrow, title, action }) {
+  return (
+    <div className="flex items-end justify-between mb-4">
+      <div>
+        {eyebrow && <div className="text-[10.5px] font-semibold tracking-[0.18em] uppercase text-[var(--gold)] mb-1">{eyebrow}</div>}
+        <h2 className="font-display text-[22px] font-medium text-[var(--ink)] leading-tight">{title}</h2>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  HEADER + SHELL
+// ─────────────────────────────────────────────────────────────
+function AppShell({ role, setRole, currentUser, onShowEmails, emailCount, children }) {
+  const roles = [
+    { id: "researcher", label: "ผู้วิจัย", icon: GraduationCap },
+    { id: "coordinator", label: "เลขานุการ IRB", icon: ClipboardCheck },
+    { id: "reviewer", label: "กรรมการ", icon: ShieldCheck },
+    { id: "chair", label: "ประธาน IRB", icon: Award },
+  ];
+
+  return (
+    <div className="min-h-screen paper-grain">
+      {/* Top bar */}
+      <header className="border-b border-[var(--line)] bg-[var(--card)]/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-[1400px] mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="h-10 w-10 rounded-md bg-[var(--teal)] flex items-center justify-center shadow-sm">
+                <Stethoscope size={20} className="text-[var(--gold-soft)]" strokeWidth={2} />
+              </div>
+              <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-[var(--gold)] flex items-center justify-center">
+                <ShieldCheck size={10} className="text-white" strokeWidth={3} />
+              </div>
+            </div>
+            <div>
+              <div className="font-display text-[17px] font-semibold text-[var(--ink)] leading-none">
+                BCNKK <span className="text-[var(--gold)]">·</span> IRB
+              </div>
+              <div className="text-[10.5px] text-[var(--ink-mute)] mt-0.5 tracking-wide">
+                ระบบจริยธรรมการวิจัยในมนุษย์ · วพบ.ขอนแก่น
+              </div>
+            </div>
+          </div>
+
+          <nav className="flex items-center gap-1 bg-[var(--paper-deep)] rounded-lg p-1">
+            {roles.map((r) => {
+              const Icon = r.icon;
+              const active = role === r.id;
+              return (
+                <button key={r.id} onClick={() => setRole(r.id)}
+                  className={`px-3 py-1.5 rounded-md text-[12.5px] font-medium transition flex items-center gap-1.5 ${active ? "bg-white text-[var(--teal)] shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"}`}>
+                  <Icon size={14} strokeWidth={2} />
+                  {r.label}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <button onClick={onShowEmails}
+              className="relative p-2 rounded-md hover:bg-[var(--paper-deep)] transition">
+              <Mail size={18} className="text-[var(--ink-soft)]" />
+              {emailCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[var(--terra)] text-white text-[10px] font-bold flex items-center justify-center">
+                  {emailCount}
+                </span>
+              )}
+            </button>
+            <div className="h-7 w-px bg-[var(--line)]" />
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[var(--teal)] to-[var(--teal-deep)] flex items-center justify-center text-white text-xs font-semibold">
+                {currentUser.initials}
+              </div>
+              <div className="text-[12px] leading-tight">
+                <div className="font-semibold text-[var(--ink)]">{currentUser.name}</div>
+                <div className="text-[var(--ink-mute)] text-[10.5px]">{currentUser.subtitle}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-[1400px] mx-auto px-6 py-7">{children}</main>
+
+      <footer className="max-w-[1400px] mx-auto px-6 py-6 mt-8 border-t border-[var(--line)]">
+        <div className="flex items-center justify-between text-[11px] text-[var(--ink-mute)]">
+          <div className="flex items-center gap-2">
+            <span className="font-display italic">BCNKK IRB Platform</span>
+            <span>·</span>
+            <span>Prototype designed by Claude</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a className="hover:text-[var(--teal)]">คู่มือการใช้</a>
+            <a className="hover:text-[var(--teal)]">SOP</a>
+            <a className="hover:text-[var(--teal)]">ติดต่อสำนักงาน</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  STAT CARD
+// ─────────────────────────────────────────────────────────────
+function StatCard({ label, value, sublabel, icon: Icon, color = "teal", trend }) {
+  const palettes = {
+    teal: { bg: "bg-[var(--teal-soft)]", text: "text-[var(--teal)]" },
+    gold: { bg: "bg-[var(--gold-soft)]", text: "text-[var(--gold)]" },
+    moss: { bg: "bg-[var(--moss-soft)]", text: "text-[var(--moss)]" },
+    terra: { bg: "bg-[var(--terra-soft)]", text: "text-[var(--terra)]" },
+    plum: { bg: "bg-[var(--plum-soft)]", text: "text-[var(--plum)]" },
+  };
+  const p = palettes[color];
+  return (
+    <Card>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[var(--ink-mute)]">{label}</div>
+          <div className="font-display text-[34px] font-medium text-[var(--ink)] mt-1 leading-none">{value}</div>
+          {sublabel && <div className="text-[11.5px] text-[var(--ink-mute)] mt-1.5">{sublabel}</div>}
+          {trend && (
+            <div className="text-[11px] mt-2 inline-flex items-center gap-1 text-[var(--moss)]">
+              <TrendingUp size={11} /> {trend}
+            </div>
+          )}
+        </div>
+        <div className={`h-10 w-10 rounded-md ${p.bg} flex items-center justify-center`}>
+          <Icon size={18} className={p.text} strokeWidth={2} />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  RESEARCHER VIEW
+// ─────────────────────────────────────────────────────────────
+function ResearcherView({ submissions, onOpen, onNew, currentUser }) {
+  const mine = submissions.filter((s) => s.piEmail === currentUser.email);
+  const stats = {
+    active: mine.filter((s) => ["submitted", "screening", "awaiting_assignment", "under_review"].includes(s.status)).length,
+    revision: mine.filter((s) => s.status === "revision_required").length,
+    approved: mine.filter((s) => s.status === "approved").length,
+    total: mine.length,
+  };
+
+  return (
+    <div className="space-y-7 animate-slide">
+      {/* Hero */}
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-12 lg:col-span-8">
+          <div className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[var(--gold)]">Researcher Workspace</div>
+          <h1 className="font-display text-[38px] font-medium text-[var(--ink)] leading-tight mt-1">
+            สวัสดี, {currentUser.firstName}
+          </h1>
+          <p className="text-[14px] text-[var(--ink-soft)] mt-2 max-w-2xl leading-relaxed">
+            ติดตามสถานะโครงการที่ส่งจริยธรรม ส่งโครงการใหม่ และตอบข้อแก้ไขจากกรรมการได้จากที่นี่
+            ระบบจะส่ง email แจ้งความคืบหน้าทุกขั้นตอนถึงท่านโดยอัตโนมัติ
+          </p>
+        </div>
+        <div className="col-span-12 lg:col-span-4 flex items-end justify-end">
+          <Btn variant="primary" size="lg" icon={FilePlus} onClick={onNew}>
+            ส่งโครงการใหม่
+          </Btn>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard label="กำลังพิจารณา" value={stats.active} sublabel="โครงการที่อยู่ในกระบวนการ" icon={Activity} color="teal" />
+        <StatCard label="รอแก้ไข" value={stats.revision} sublabel="ตอบกลับภายใน 60 วัน" icon={AlertCircle} color="terra" />
+        <StatCard label="อนุมัติแล้ว" value={stats.approved} sublabel="โครงการที่ได้รับการรับรอง" icon={Award} color="moss" />
+        <StatCard label="รวมทั้งหมด" value={stats.total} sublabel="โครงการที่เคยส่ง" icon={BookOpen} color="gold" />
+      </div>
+
+      {/* My Submissions Table */}
+      <div>
+        <SectionTitle eyebrow="My Submissions" title="โครงการของฉัน" />
+        <Card padded={false} className="overflow-hidden">
+          <div className="bg-[var(--paper-deep)]/40 px-5 py-3 border-b border-[var(--line)] flex items-center gap-3">
+            <Search size={14} className="text-[var(--ink-mute)]" />
+            <input placeholder="ค้นหาเลขที่โครงการ ชื่อ หรือ keyword..." className="flex-1 bg-transparent text-[12.5px] outline-none placeholder:text-[var(--ink-mute)]/60" />
+            <Btn size="sm" variant="ghost" icon={Filter}>ตัวกรอง</Btn>
+          </div>
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr className="border-b border-[var(--line)] text-left text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)]">
+                  <th className="px-5 py-3">เลขที่</th>
+                  <th className="px-5 py-3">ชื่อโครงการ</th>
+                  <th className="px-5 py-3">ประเภท</th>
+                  <th className="px-5 py-3">วันส่ง</th>
+                  <th className="px-5 py-3">สถานะ</th>
+                  <th className="px-5 py-3 text-right">การกระทำ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mine.map((s) => (
+                  <tr key={s.id} className="border-b border-[var(--line-soft)] hover:bg-[var(--paper-deep)]/30 transition cursor-pointer" onClick={() => onOpen(s.id)}>
+                    <td className="px-5 py-4">
+                      <div className="font-mono text-[11.5px] font-semibold text-[var(--teal)]">{s.id}</div>
+                    </td>
+                    <td className="px-5 py-4 max-w-md">
+                      <div className="font-medium text-[var(--ink)] line-clamp-1">{s.title}</div>
+                      <div className="text-[11px] text-[var(--ink-mute)] mt-0.5 italic line-clamp-1">{s.titleEn}</div>
+                    </td>
+                    <td className="px-5 py-4">
+                      <Badge color={s.type.includes("Full") ? "plum" : "moss"}>{s.type.includes("Full") ? "Full Board" : "Expedited"}</Badge>
+                    </td>
+                    <td className="px-5 py-4 text-[var(--ink-soft)] font-mono text-[11.5px]">{s.submittedAt}</td>
+                    <td className="px-5 py-4"><StatusPill status={s.status} /></td>
+                    <td className="px-5 py-4 text-right">
+                      <Btn size="sm" variant="ghost" icon={ChevronRight}>ดูรายละเอียด</Btn>
+                    </td>
+                  </tr>
+                ))}
+                {mine.length === 0 && (
+                  <tr><td colSpan={6} className="px-5 py-12 text-center text-[var(--ink-mute)]">ยังไม่มีโครงการที่ส่ง</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  SUBMISSION DETAIL (Researcher view)
+// ─────────────────────────────────────────────────────────────
+function SubmissionDetail({ sub, onBack, reviewers }) {
+  if (!sub) return null;
+  const rDetails = sub.reviewers.map((r) => ({ ...r, ...reviewers.find((x) => x.id === r.id) }));
+
+  return (
+    <div className="space-y-6 animate-slide">
+      <button onClick={onBack} className="text-[12.5px] text-[var(--ink-mute)] hover:text-[var(--teal)] inline-flex items-center gap-1">
+        <ArrowLeft size={14} /> กลับไปหน้ารายการ
+      </button>
+
+      {/* Header */}
+      <div className="grid grid-cols-12 gap-5">
+        <Card className="col-span-12 lg:col-span-8">
+          <div className="flex items-start justify-between gap-4 mb-3">
+            <div className="font-mono text-[12px] font-semibold text-[var(--teal)] tracking-wide">{sub.id}</div>
+            <StatusPill status={sub.status} />
+          </div>
+          <h1 className="font-display text-[26px] font-medium text-[var(--ink)] leading-snug">{sub.title}</h1>
+          <p className="text-[13px] italic text-[var(--ink-mute)] mt-1.5">{sub.titleEn}</p>
+
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-5 pt-5 border-t border-[var(--line-soft)]">
+            <Meta icon={User} label="ผู้วิจัยหลัก" value={sub.pi} />
+            <Meta icon={Building2} label="ภาควิชา" value={sub.dept} />
+            <Meta icon={ShieldCheck} label="ประเภทการพิจารณา" value={sub.type} />
+            <Meta icon={AlertTriangle} label="ระดับความเสี่ยง" value={sub.risk} />
+            <Meta icon={Users} label="ผู้เข้าร่วม" value={sub.participants} />
+            <Meta icon={Calendar} label="วันส่ง" value={sub.submittedAt} />
+          </div>
+
+          {sub.status === "approved" && (
+            <div className="mt-5 p-4 rounded-md border-2 border-dashed border-[var(--moss)]/40 bg-[var(--moss-soft)]/40">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-[var(--moss)]">Certificate of Approval</div>
+                  <div className="font-display text-[19px] font-semibold text-[var(--ink)] mt-1">{sub.approvalNumber}</div>
+                  <div className="text-[12px] text-[var(--ink-soft)] mt-1.5">
+                    มีผล: <span className="font-mono">{sub.approvalDate}</span> · หมดอายุ: <span className="font-mono">{sub.expirationDate}</span>
+                  </div>
+                </div>
+                <Btn variant="gold" size="sm" icon={Download}>ดาวน์โหลด</Btn>
+              </div>
+            </div>
+          )}
+
+          {sub.status === "revision_required" && (
+            <div className="mt-5 p-4 rounded-md bg-[var(--terra-soft)]/40 border border-[var(--terra)]/30">
+              <div className="flex items-start gap-3">
+                <AlertCircle size={20} className="text-[var(--terra)] flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <div className="font-semibold text-[var(--terra)]">ต้องแก้ไขสาระสำคัญ (Major revisions)</div>
+                  <div className="text-[12.5px] text-[var(--ink-soft)] mt-1">กรรมการ 3 ท่านได้พิจารณาเสร็จแล้ว — กรุณาส่งฉบับแก้ไขพร้อม Response-to-Reviewers ภายใน 60 วัน</div>
+                  <div className="mt-3 flex gap-2">
+                    <Btn size="sm" variant="primary" icon={Edit3}>ส่งฉบับแก้ไข</Btn>
+                    <Btn size="sm" variant="outline" icon={Download}>ดาวน์โหลดความเห็นกรรมการ</Btn>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Reviewer panel (anonymized) */}
+        <Card className="col-span-12 lg:col-span-4">
+          <div className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-[var(--gold)]">Review Progress</div>
+          <h3 className="font-display text-[18px] font-medium mt-1 mb-4">ความคืบหน้าการพิจารณา</h3>
+          {rDetails.length === 0 ? (
+            <div className="text-[12.5px] text-[var(--ink-mute)] py-6 text-center border border-dashed border-[var(--line)] rounded-md">
+              ยังไม่มีกรรมการที่ assigned
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {rDetails.map((r, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-md bg-[var(--paper-deep)]/40">
+                  <div className="h-8 w-8 rounded-full bg-white border border-[var(--line)] flex items-center justify-center text-[11px] font-semibold text-[var(--ink-mute)]">
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[12.5px] font-semibold text-[var(--ink)]">Reviewer {String.fromCharCode(65 + i)}</div>
+                    <div className="text-[10.5px] text-[var(--ink-mute)]">นิรนาม (Blind review)</div>
+                  </div>
+                  {r.status === "completed" && <CheckCircle2 size={18} className="text-[var(--moss)]" />}
+                  {r.status === "in_progress" && <Clock size={18} className="text-[var(--gold)] animate-pulse-soft" />}
+                  {r.status === "pending" && <Clock size={18} className="text-stone-400" />}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-5 pt-4 border-t border-[var(--line-soft)]">
+            <div className="text-[10.5px] font-semibold tracking-[0.14em] uppercase text-[var(--ink-mute)] mb-2">ค่าธรรมเนียม</div>
+            <div className="font-display text-[20px] font-medium text-[var(--ink)]">฿{sub.fee.toLocaleString()}</div>
+            <div className="text-[10.5px] text-[var(--ink-mute)] mt-0.5">ชำระแล้ว · 2569-04-12</div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Documents + Timeline */}
+      <div className="grid grid-cols-12 gap-5">
+        <Card className="col-span-12 lg:col-span-7">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-[18px] font-medium">เอกสารแนบ</h3>
+            <Btn size="sm" variant="outline" icon={Upload}>อัปโหลดเอกสารเพิ่ม</Btn>
+          </div>
+          <div className="divide-y divide-[var(--line-soft)]">
+            {sub.documents.map((d, i) => (
+              <div key={i} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <div className="h-9 w-9 rounded-md bg-[var(--terra-soft)]/40 flex items-center justify-center">
+                  <FileText size={16} className="text-[var(--terra)]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-[13px] text-[var(--ink)]">{d.name}</div>
+                  <div className="text-[11px] text-[var(--ink-mute)]">{d.type} · {d.size} · v{d.version}</div>
+                </div>
+                <Btn size="sm" variant="ghost" icon={Download}>ดาวน์โหลด</Btn>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="col-span-12 lg:col-span-5">
+          <h3 className="font-display text-[18px] font-medium mb-4">Timeline</h3>
+          <div className="relative">
+            <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[var(--line)]" />
+            <div className="space-y-4">
+              {sub.timeline.slice().reverse().map((t, i) => {
+                const Icon = ICON_MAP[t.icon] || Activity;
+                return (
+                  <div key={i} className="flex gap-4 relative">
+                    <div className="h-8 w-8 rounded-full bg-white border-2 border-[var(--teal)]/30 flex items-center justify-center flex-shrink-0 z-10">
+                      <Icon size={14} className="text-[var(--teal)]" />
+                    </div>
+                    <div className="flex-1 pt-1">
+                      <div className="text-[12.5px] font-medium text-[var(--ink)] leading-tight">{t.event}</div>
+                      <div className="text-[11px] text-[var(--ink-mute)] mt-0.5">{t.actor} · <span className="font-mono">{t.date}</span></div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function Meta({ icon: Icon, label, value }) {
+  return (
+    <div className="flex gap-2.5">
+      <Icon size={15} className="text-[var(--ink-mute)] flex-shrink-0 mt-0.5" />
+      <div className="min-w-0">
+        <div className="text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)]">{label}</div>
+        <div className="text-[12.5px] text-[var(--ink)] mt-0.5 leading-snug">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  NEW SUBMISSION FORM (multi-step)
+// ─────────────────────────────────────────────────────────────
+function NewSubmissionForm({ onCancel, onSubmit, currentUser }) {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState({
+    title: "", titleEn: "", type: "Full Board Review", risk: "Greater than minimal risk",
+    participants: "", recruitment: "", consent: "", risks: "", benefits: "",
+    coI: "", funding: "", documents: [],
+  });
+
+  const steps = [
+    { id: 0, label: "ข้อมูลโครงการ", icon: FileText },
+    { id: 1, label: "ผู้วิจัย", icon: Users },
+    { id: 2, label: "รายละเอียดวิจัย", icon: ListChecks },
+    { id: 3, label: "เอกสาร", icon: Paperclip },
+    { id: 4, label: "ตรวจสอบและส่ง", icon: Send },
+  ];
+
+  return (
+    <div className="space-y-6 animate-slide">
+      <button onClick={onCancel} className="text-[12.5px] text-[var(--ink-mute)] hover:text-[var(--teal)] inline-flex items-center gap-1">
+        <ArrowLeft size={14} /> ยกเลิก
+      </button>
+
+      <div>
+        <div className="text-[10.5px] font-semibold tracking-[0.18em] uppercase text-[var(--gold)]">New Submission</div>
+        <h1 className="font-display text-[32px] font-medium text-[var(--ink)] leading-tight mt-1">
+          ส่งโครงการวิจัยใหม่
+        </h1>
+      </div>
+
+      {/* Stepper */}
+      <Card>
+        <div className="flex items-center justify-between gap-2">
+          {steps.map((s, i) => {
+            const Icon = s.icon;
+            const active = step === s.id;
+            const done = step > s.id;
+            return (
+              <React.Fragment key={s.id}>
+                <button onClick={() => setStep(s.id)} className="flex flex-col items-center gap-1.5 group">
+                  <div className={`h-9 w-9 rounded-full flex items-center justify-center border-2 transition ${
+                    active ? "bg-[var(--teal)] border-[var(--teal)] text-white" :
+                    done ? "bg-[var(--moss)] border-[var(--moss)] text-white" :
+                    "bg-white border-[var(--line)] text-[var(--ink-mute)]"
+                  }`}>
+                    {done ? <Check size={16} strokeWidth={3} /> : <Icon size={15} />}
+                  </div>
+                  <div className={`text-[11px] font-medium ${active ? "text-[var(--teal)]" : "text-[var(--ink-mute)]"}`}>{s.label}</div>
+                </button>
+                {i < steps.length - 1 && <div className={`flex-1 h-px ${done ? "bg-[var(--moss)]" : "bg-[var(--line)]"} mb-5`} />}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </Card>
+
+      {/* Form sections */}
+      <Card>
+        {step === 0 && (
+          <div className="space-y-5">
+            <h3 className="font-display text-[20px] font-medium">ข้อมูลโครงการ</h3>
+            <Field label="ชื่อโครงการ (ภาษาไทย)" required>
+              <Textarea rows={2} placeholder="ระบุชื่อโครงการเป็นภาษาไทย" defaultValue={data.title} />
+            </Field>
+            <Field label="Project Title (English)" required>
+              <Textarea rows={2} placeholder="Title in English" defaultValue={data.titleEn} />
+            </Field>
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="ประเภทการพิจารณาที่ขอ" required>
+                <Select defaultValue={data.type}>
+                  <option>Full Board Review</option>
+                  <option>Expedited Review</option>
+                  <option>Exempt Review</option>
+                </Select>
+              </Field>
+              <Field label="ระดับความเสี่ยง" required>
+                <Select defaultValue={data.risk}>
+                  <option>Minimal risk</option>
+                  <option>Greater than minimal risk</option>
+                </Select>
+              </Field>
+            </div>
+            <Field label="แหล่งทุน" sublabel="ถ้ามี">
+              <Input placeholder="เช่น สวรส., วช., NIH Fogarty, Wellcome Trust" />
+            </Field>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="space-y-5">
+            <h3 className="font-display text-[20px] font-medium">ข้อมูลผู้วิจัย</h3>
+            <div className="p-4 rounded-md bg-[var(--paper-deep)]/40 border border-[var(--line-soft)]">
+              <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[var(--ink-mute)] mb-2">ผู้วิจัยหลัก (Auto-filled)</div>
+              <div className="grid grid-cols-2 gap-3 text-[13px]">
+                <div><span className="text-[var(--ink-mute)]">ชื่อ:</span> <span className="font-medium">{currentUser.name}</span></div>
+                <div><span className="text-[var(--ink-mute)]">อีเมล:</span> <span className="font-medium">{currentUser.email}</span></div>
+                <div><span className="text-[var(--ink-mute)]">ภาควิชา:</span> <span className="font-medium">{currentUser.dept}</span></div>
+                <div><span className="text-[var(--ink-mute)]">ตำแหน่ง:</span> <span className="font-medium">ผู้ช่วยศาสตราจารย์</span></div>
+              </div>
+            </div>
+            <Field label="ผู้วิจัยร่วม (Co-Investigators)" sublabel="คั่นด้วยเครื่องหมายจุลภาค">
+              <Textarea rows={3} placeholder="ชื่อ-นามสกุล, อีเมล, สังกัด" />
+            </Field>
+            <Field label="ที่ปรึกษา / Mentor (ถ้ามี)">
+              <Input placeholder="ชื่อ-นามสกุล, สังกัด" />
+            </Field>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-5">
+            <h3 className="font-display text-[20px] font-medium">รายละเอียดการวิจัย</h3>
+            <Field label="ประชากร / กลุ่มตัวอย่าง" required>
+              <Textarea rows={2} placeholder="เช่น หญิงตั้งครรภ์ที่มีภาวะเสี่ยงคลอดก่อนกำหนด อายุครรภ์ 24-36 สัปดาห์ จำนวน 60 ราย" />
+            </Field>
+            <Field label="วิธีคัดเลือกผู้เข้าร่วม (Recruitment)" required>
+              <Textarea rows={3} placeholder="วิธีการรับสมัคร เกณฑ์คัดเข้า/ออก" />
+            </Field>
+            <Field label="กระบวนการขอความยินยอม (Informed consent)" required>
+              <Textarea rows={3} placeholder="อธิบายขั้นตอน รวมถึงการให้เวลาตัดสินใจและการจัดการกับ vulnerable population" />
+            </Field>
+            <Field label="ความเสี่ยงและการป้องกัน" required>
+              <Textarea rows={3} />
+            </Field>
+            <Field label="ประโยชน์ที่คาดว่าจะได้รับ" required>
+              <Textarea rows={2} />
+            </Field>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-5">
+            <h3 className="font-display text-[20px] font-medium">เอกสารแนบ</h3>
+            <p className="text-[12.5px] text-[var(--ink-soft)]">อัปโหลดเอกสารต่อไปนี้เป็น PDF (ไม่เกิน 10 MB ต่อไฟล์)</p>
+
+            {[
+              { name: "โครงร่างวิจัยฉบับเต็ม (Protocol)", required: true },
+              { name: "ใบยินยอมเข้าร่วมการวิจัย (Informed Consent Form)", required: true },
+              { name: "เครื่องมือวิจัย / แบบสอบถาม", required: true },
+              { name: "CV ผู้วิจัยหลัก (พร้อมเลข ORCID)", required: true },
+              { name: "ใบรับรอง Human Subject Training (CITI/GCP)", required: true },
+              { name: "เอกสารโฆษณา / ใบประชาสัมพันธ์", required: false },
+              { name: "หนังสือรับรองจากแหล่งทุน (ถ้ามี)", required: false },
+            ].map((doc, i) => (
+              <div key={i} className="flex items-center gap-4 p-4 border border-dashed border-[var(--line)] rounded-md hover:border-[var(--teal)]/40 hover:bg-[var(--teal-soft)]/20 transition cursor-pointer">
+                <Upload size={20} className="text-[var(--ink-mute)]" />
+                <div className="flex-1">
+                  <div className="text-[13px] font-medium text-[var(--ink)]">
+                    {doc.name} {doc.required && <span className="text-[var(--terra)]">*</span>}
+                  </div>
+                  <div className="text-[11px] text-[var(--ink-mute)]">คลิกเพื่ออัปโหลด หรือลากไฟล์มาวางที่นี่</div>
+                </div>
+                <Btn size="sm" variant="outline">เลือกไฟล์</Btn>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="space-y-5">
+            <h3 className="font-display text-[20px] font-medium">ตรวจสอบและส่ง</h3>
+            <div className="p-5 rounded-md border-2 border-dashed border-[var(--gold)]/40 bg-[var(--gold-soft)]/30">
+              <div className="flex items-start gap-3">
+                <ScrollText size={22} className="text-[var(--gold)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-display text-[16px] font-semibold text-[var(--ink)]">คำรับรองของผู้วิจัย</div>
+                  <p className="text-[12.5px] text-[var(--ink-soft)] mt-2 leading-relaxed">
+                    ข้าพเจ้าขอรับรองว่าข้อมูลที่ระบุในคำขอนี้เป็นความจริงทุกประการ และจะดำเนินการวิจัยตาม
+                    หลักจริยธรรมการวิจัยในมนุษย์ตามแนวปฏิบัติของ ICH-GCP, Declaration of Helsinki และ
+                    Belmont Report ข้าพเจ้าจะไม่เริ่มเก็บข้อมูลก่อนได้รับการอนุมัติจาก IRB และจะรายงาน
+                    ความก้าวหน้าและเหตุการณ์ไม่พึงประสงค์ตามที่กำหนด
+                  </p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <input type="checkbox" id="agree" className="rounded border-[var(--line)]" />
+                    <label htmlFor="agree" className="text-[12.5px] font-medium text-[var(--ink)]">ข้าพเจ้ารับทราบและยอมรับ</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-md bg-[var(--teal-soft)]/40 border border-[var(--teal)]/20">
+              <div className="text-[12px] font-semibold text-[var(--teal-deep)] mb-2 flex items-center gap-2">
+                <Mail size={14} /> เมื่อกดส่งโครงการ ระบบจะดำเนินการต่อไปนี้อัตโนมัติ
+              </div>
+              <ul className="text-[12px] text-[var(--ink-soft)] space-y-1 ml-6">
+                <li>• สร้างเลขที่โครงการอัตโนมัติ (รูปแบบ: BCNKK-IRB-[ปี]-[ลำดับ])</li>
+                <li>• ส่ง email ยืนยันถึงผู้วิจัย ({currentUser.email})</li>
+                <li>• แจ้งเลขานุการ IRB เพื่อคัดกรองเบื้องต้น</li>
+                <li>• สร้าง tracking link ให้ติดตามสถานะแบบเรียลไทม์</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Nav buttons */}
+        <div className="flex items-center justify-between gap-3 mt-7 pt-5 border-t border-[var(--line-soft)]">
+          <Btn variant="ghost" disabled={step === 0} onClick={() => setStep(Math.max(0, step - 1))} icon={ArrowLeft}>ย้อนกลับ</Btn>
+          <div className="flex gap-3">
+            <Btn variant="outline">บันทึกฉบับร่าง</Btn>
+            {step < steps.length - 1 ? (
+              <Btn variant="primary" onClick={() => setStep(step + 1)}>
+                ถัดไป <ArrowRight size={15} />
+              </Btn>
+            ) : (
+              <Btn variant="primary" icon={Send} onClick={onSubmit}>ส่งโครงการ</Btn>
+            )}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  COORDINATOR VIEW
+// ─────────────────────────────────────────────────────────────
+function CoordinatorView({ submissions, onOpen, currentUser }) {
+  const stats = {
+    new: submissions.filter((s) => s.status === "submitted" || s.status === "screening").length,
+    awaiting: submissions.filter((s) => s.status === "awaiting_assignment").length,
+    inReview: submissions.filter((s) => s.status === "under_review").length,
+    revision: submissions.filter((s) => s.status === "revision_required").length,
+  };
+
+  const queue = [
+    ...submissions.filter((s) => s.status === "awaiting_assignment"),
+    ...submissions.filter((s) => s.status === "under_review"),
+    ...submissions.filter((s) => s.status === "revision_required"),
+  ];
+
+  return (
+    <div className="space-y-7 animate-slide">
+      <div>
+        <div className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[var(--gold)]">IRB Coordinator</div>
+        <h1 className="font-display text-[36px] font-medium text-[var(--ink)] leading-tight mt-1">
+          สำนักงาน IRB · กระดานควบคุม
+        </h1>
+        <p className="text-[13.5px] text-[var(--ink-soft)] mt-2 max-w-2xl">
+          คัดกรองโครงการที่ส่งใหม่ มอบหมายกรรมการผู้พิจารณา ติดตามและเร่งรัด เป็นศูนย์กลางการสื่อสารระหว่างผู้วิจัยกับกรรมการ
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard label="ส่งใหม่" value={stats.new} sublabel="รอคัดกรองเบื้องต้น" icon={Inbox} color="teal" />
+        <StatCard label="รอ Assign" value={stats.awaiting} sublabel="ต้องมอบหมายกรรมการ" icon={UserPlus} color="terra" />
+        <StatCard label="กำลังพิจารณา" value={stats.inReview} sublabel="กรรมการกำลัง review" icon={Activity} color="plum" />
+        <StatCard label="รอแก้ไข" value={stats.revision} sublabel="ผู้วิจัยกำลังแก้ไข" icon={Edit3} color="gold" />
+      </div>
+
+      {/* Action queue */}
+      <div>
+        <SectionTitle eyebrow="Action Queue" title="คิวงานที่ต้องดำเนินการ" />
+        <div className="space-y-3">
+          {queue.map((s) => (
+            <Card key={s.id} className="hover:border-[var(--teal)]/30 transition cursor-pointer" padded={false}>
+              <div className="p-4 flex items-center gap-4">
+                <div className="flex-shrink-0">
+                  <div className={`h-12 w-12 rounded-md flex items-center justify-center ${
+                    s.status === "awaiting_assignment" ? "bg-[var(--terra-soft)]" :
+                    s.status === "under_review" ? "bg-[var(--plum-soft)]" :
+                    "bg-[var(--gold-soft)]"
+                  }`}>
+                    {s.status === "awaiting_assignment" && <UserPlus size={20} className="text-[var(--terra)]" />}
+                    {s.status === "under_review" && <Activity size={20} className="text-[var(--plum)]" />}
+                    {s.status === "revision_required" && <Edit3 size={20} className="text-[var(--gold)]" />}
+                  </div>
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-[11.5px] font-semibold text-[var(--teal)]">{s.id}</span>
+                    <StatusPill status={s.status} />
+                    <Badge color={s.type.includes("Full") ? "plum" : "moss"}>{s.type.includes("Full") ? "Full Board" : "Expedited"}</Badge>
+                  </div>
+                  <div className="font-medium text-[14px] text-[var(--ink)] line-clamp-1">{s.title}</div>
+                  <div className="text-[11.5px] text-[var(--ink-mute)] mt-1 flex items-center gap-3">
+                    <span>{s.pi}</span>
+                    <span>·</span>
+                    <span className="font-mono">{s.submittedAt}</span>
+                    {s.reviewers.length > 0 && (
+                      <>
+                        <span>·</span>
+                        <span>{s.reviewers.filter((r) => r.status === "completed").length}/{s.reviewers.length} กรรมการเสร็จ</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {s.status === "awaiting_assignment" && (
+                    <Btn size="sm" variant="primary" icon={UserPlus} onClick={() => onOpen(s.id)}>Assign กรรมการ</Btn>
+                  )}
+                  {s.status === "under_review" && (
+                    <Btn size="sm" variant="outline" icon={Bell} onClick={() => onOpen(s.id)}>เร่งกรรมการ</Btn>
+                  )}
+                  {s.status === "revision_required" && (
+                    <Btn size="sm" variant="outline" icon={Eye} onClick={() => onOpen(s.id)}>ดูรายละเอียด</Btn>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Reviewer pool */}
+      <div>
+        <SectionTitle eyebrow="Reviewer Pool" title="กรรมการผู้พิจารณา" action={<Btn size="sm" variant="outline" icon={Plus}>เพิ่มกรรมการ</Btn>} />
+        <Card padded={false}>
+          <table className="w-full text-[13px]">
+            <thead>
+              <tr className="border-b border-[var(--line)] text-left text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)]">
+                <th className="px-5 py-3">ชื่อ</th>
+                <th className="px-5 py-3">ภาควิชา</th>
+                <th className="px-5 py-3">ความเชี่ยวชาญ</th>
+                <th className="px-5 py-3">งานที่กำลังพิจารณา</th>
+                <th className="px-5 py-3">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {seedReviewers.map((r) => (
+                <tr key={r.id} className="border-b border-[var(--line-soft)] hover:bg-[var(--paper-deep)]/30 transition">
+                  <td className="px-5 py-3">
+                    <div className="font-medium text-[var(--ink)]">{r.name}</div>
+                    <div className="text-[11px] text-[var(--ink-mute)] font-mono">{r.email}</div>
+                  </td>
+                  <td className="px-5 py-3 text-[12px] text-[var(--ink-soft)]">{r.dept}</td>
+                  <td className="px-5 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {r.expertise.map((e) => <Badge key={e} color="teal">{e}</Badge>)}
+                    </div>
+                  </td>
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-16 rounded-full bg-[var(--paper-deep)] overflow-hidden">
+                        <div className={`h-full rounded-full ${r.load >= 3 ? "bg-[var(--terra)]" : r.load >= 2 ? "bg-[var(--gold)]" : "bg-[var(--moss)]"}`} style={{ width: `${(r.load / 4) * 100}%` }} />
+                      </div>
+                      <span className="text-[12px] font-medium">{r.load} โครงการ</span>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3">
+                    {r.load >= 3 ? <Badge color="terra">งานเต็ม</Badge> : <Badge color="moss">พร้อมรับงาน</Badge>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  COORDINATOR — ASSIGN REVIEWERS MODAL/VIEW
+// ─────────────────────────────────────────────────────────────
+function CoordinatorSubmissionDetail({ sub, onBack, onAssign, reviewers }) {
+  const [selected, setSelected] = useState(sub.reviewers.map((r) => r.id));
+  const [assigned, setAssigned] = useState(sub.reviewers.length > 0);
+
+  const toggle = (id) => setSelected((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
+
+  const doAssign = () => {
+    onAssign(sub.id, selected);
+    setAssigned(true);
+  };
+
+  return (
+    <div className="space-y-6 animate-slide">
+      <button onClick={onBack} className="text-[12.5px] text-[var(--ink-mute)] hover:text-[var(--teal)] inline-flex items-center gap-1">
+        <ArrowLeft size={14} /> กลับไปคิวงาน
+      </button>
+
+      <Card>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <div className="font-mono text-[12px] font-semibold text-[var(--teal)] tracking-wide">{sub.id}</div>
+            <h1 className="font-display text-[24px] font-medium text-[var(--ink)] leading-snug mt-1">{sub.title}</h1>
+            <p className="text-[12.5px] text-[var(--ink-mute)] italic mt-1">{sub.titleEn}</p>
+            <div className="flex items-center gap-3 mt-3 text-[12.5px]">
+              <span><span className="text-[var(--ink-mute)]">PI:</span> <span className="font-medium">{sub.pi}</span></span>
+              <span>·</span>
+              <span>{sub.dept}</span>
+              <span>·</span>
+              <Badge color={sub.type.includes("Full") ? "plum" : "moss"}>{sub.type}</Badge>
+            </div>
+          </div>
+          <StatusPill status={sub.status} />
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-12 gap-5">
+        {/* Reviewer assignment */}
+        <Card className="col-span-12 lg:col-span-7">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-[var(--gold)]">Assignment</div>
+              <h3 className="font-display text-[20px] font-medium mt-0.5">มอบหมายกรรมการพิจารณา</h3>
+            </div>
+            <Badge color={selected.length >= 3 ? "moss" : "terra"}>เลือก {selected.length}/3 ท่าน</Badge>
+          </div>
+
+          <div className="space-y-2.5">
+            {reviewers.map((r) => {
+              const isSelected = selected.includes(r.id);
+              const matchesExpertise = r.expertise.some((e) => sub.title.toLowerCase().includes(e.toLowerCase().split(" ")[0]));
+              return (
+                <button key={r.id} onClick={() => toggle(r.id)}
+                  className={`w-full text-left p-3.5 rounded-md border transition ${isSelected ? "border-[var(--teal)] bg-[var(--teal-soft)]/40" : "border-[var(--line)] hover:border-[var(--teal)]/30 hover:bg-[var(--paper-deep)]/40"}`}>
+                  <div className="flex items-start gap-3">
+                    <div className={`h-5 w-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected ? "border-[var(--teal)] bg-[var(--teal)]" : "border-[var(--line)] bg-white"}`}>
+                      {isSelected && <Check size={12} strokeWidth={3} className="text-white" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-medium text-[13px] text-[var(--ink)]">{r.name}</span>
+                        {matchesExpertise && <Badge color="gold">เชี่ยวชาญ</Badge>}
+                        {r.load >= 3 && <Badge color="terra">งานเต็ม</Badge>}
+                      </div>
+                      <div className="text-[11px] text-[var(--ink-mute)] mt-0.5">{r.dept}</div>
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {r.expertise.map((e) => <Badge key={e} color="teal" size="sm">{e}</Badge>)}
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-[11px] text-[var(--ink-mute)]">โหลด</div>
+                      <div className="text-[16px] font-display font-medium text-[var(--ink)]">{r.load}</div>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {!assigned && selected.length > 0 && (
+            <div className="mt-5 p-4 rounded-md bg-[var(--teal-soft)]/40 border border-[var(--teal)]/20">
+              <div className="text-[12.5px] font-semibold text-[var(--teal-deep)] mb-2 flex items-center gap-2">
+                <Mail size={14} /> เมื่อกด Assign ระบบจะส่ง email อัตโนมัติถึง:
+              </div>
+              <ul className="text-[12px] text-[var(--ink-soft)] space-y-1 ml-6">
+                {selected.map((id) => {
+                  const r = reviewers.find((x) => x.id === id);
+                  return <li key={id}>• {r.name} ({r.email})</li>;
+                })}
+                <li>• {sub.pi} (แจ้ง update สถานะ)</li>
+              </ul>
+              <div className="mt-3 flex justify-end">
+                <Btn variant="primary" icon={Send} onClick={doAssign}>ส่งงาน + แจ้งทาง email</Btn>
+              </div>
+            </div>
+          )}
+
+          {assigned && (
+            <div className="mt-5 p-4 rounded-md bg-[var(--moss-soft)]/40 border border-[var(--moss)]/30 flex items-center gap-3">
+              <CheckCircle2 size={20} className="text-[var(--moss)] flex-shrink-0" />
+              <div className="text-[12.5px]">
+                <div className="font-semibold text-[var(--moss)]">มอบหมายเรียบร้อย</div>
+                <div className="text-[var(--ink-soft)]">ส่ง email แจ้งกรรมการแล้ว · กำหนดส่งความเห็นภายใน 14 วัน</div>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Submission summary */}
+        <Card className="col-span-12 lg:col-span-5">
+          <div className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-[var(--gold)]">Summary</div>
+          <h3 className="font-display text-[19px] font-medium mt-0.5 mb-4">สรุปโครงการ</h3>
+          <div className="space-y-3 text-[12.5px]">
+            <div>
+              <div className="text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)] mb-1">ผู้เข้าร่วม</div>
+              <div className="text-[var(--ink)]">{sub.participants}</div>
+            </div>
+            <div>
+              <div className="text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)] mb-1">ระดับความเสี่ยง</div>
+              <div className="text-[var(--ink)]">{sub.risk}</div>
+            </div>
+            <div>
+              <div className="text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)] mb-1">เอกสารแนบ ({sub.documents.length})</div>
+              <div className="space-y-1.5 mt-1">
+                {sub.documents.map((d, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[12px]">
+                    <FileText size={13} className="text-[var(--terra)]" />
+                    <span className="text-[var(--ink)]">{d.name}</span>
+                    <span className="text-[10.5px] text-[var(--ink-mute)] ml-auto font-mono">{d.size}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  REVIEWER VIEW
+// ─────────────────────────────────────────────────────────────
+function ReviewerView({ submissions, onOpen, currentUser }) {
+  // assignments where this reviewer is included
+  const assignments = submissions.filter((s) => s.reviewers.some((r) => r.id === currentUser.reviewerId));
+
+  const pending = assignments.filter((s) => {
+    const me = s.reviewers.find((r) => r.id === currentUser.reviewerId);
+    return me && me.status !== "completed";
+  });
+  const completed = assignments.filter((s) => {
+    const me = s.reviewers.find((r) => r.id === currentUser.reviewerId);
+    return me && me.status === "completed";
+  });
+
+  return (
+    <div className="space-y-7 animate-slide">
+      <div>
+        <div className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[var(--gold)]">Reviewer Workspace</div>
+        <h1 className="font-display text-[36px] font-medium text-[var(--ink)] leading-tight mt-1">
+          งานพิจารณาของ {currentUser.firstName}
+        </h1>
+        <p className="text-[13.5px] text-[var(--ink-soft)] mt-2">
+          ดาวน์โหลดเอกสารโครงการที่ได้รับมอบหมาย ส่งความเห็นเป็นความลับ และติดตามงานที่ทำเสร็จแล้ว
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <StatCard label="ค้างพิจารณา" value={pending.length} sublabel="ต้องส่งความเห็นภายในกำหนด" icon={Clock} color="terra" />
+        <StatCard label="พิจารณาแล้ว (ปีนี้)" value={completed.length} sublabel="ในปีงบประมาณ 2569" icon={CheckCircle2} color="moss" />
+        <StatCard label="ค่าตอบแทนคงค้าง" value="฿4,500" sublabel="3 โครงการ × ฿1,500" icon={Award} color="gold" />
+      </div>
+
+      <div>
+        <SectionTitle eyebrow="Pending" title="งานที่ต้องพิจารณา" />
+        <div className="space-y-3">
+          {pending.length === 0 && (
+            <Card><div className="text-center py-8 text-[var(--ink-mute)] text-[13px]">ไม่มีงานค้างพิจารณา 🌿</div></Card>
+          )}
+          {pending.map((s) => {
+            const me = s.reviewers.find((r) => r.id === currentUser.reviewerId);
+            return (
+              <Card key={s.id} className="hover:border-[var(--teal)]/30 transition cursor-pointer">
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-md bg-[var(--terra-soft)] flex items-center justify-center flex-shrink-0">
+                    <ClipboardCheck size={20} className="text-[var(--terra)]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-[11.5px] font-semibold text-[var(--teal)]">{s.id}</span>
+                      <Badge color={s.type.includes("Full") ? "plum" : "moss"}>{s.type}</Badge>
+                      <Badge color="terra">{me.status === "in_progress" ? "กำลังพิจารณา" : "ใหม่"}</Badge>
+                    </div>
+                    <div className="font-medium text-[14px] text-[var(--ink)] line-clamp-1">{s.title}</div>
+                    <div className="text-[11.5px] text-[var(--ink-mute)] mt-1">
+                      ได้รับมอบหมาย: <span className="font-mono">{s.timeline.find((t) => t.icon === "users")?.date || "-"}</span>
+                      <span className="mx-2">·</span>
+                      กำหนดส่ง: <span className="font-mono text-[var(--terra)] font-semibold">2569-04-29</span>
+                    </div>
+                  </div>
+                  <Btn size="sm" variant="primary" icon={Edit3} onClick={() => onOpen(s.id)}>เริ่มพิจารณา</Btn>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      {completed.length > 0 && (
+        <div>
+          <SectionTitle eyebrow="Completed" title="งานที่ส่งความเห็นแล้ว" />
+          <Card padded={false}>
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr className="border-b border-[var(--line)] text-left text-[10.5px] font-semibold tracking-[0.12em] uppercase text-[var(--ink-mute)]">
+                  <th className="px-5 py-3">เลขที่</th>
+                  <th className="px-5 py-3">ชื่อโครงการ</th>
+                  <th className="px-5 py-3">ความเห็น</th>
+                  <th className="px-5 py-3">วันส่ง</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completed.map((s) => {
+                  const me = s.reviewers.find((r) => r.id === currentUser.reviewerId);
+                  const rec = REC_META[me.recommendation];
+                  return (
+                    <tr key={s.id} className="border-b border-[var(--line-soft)]">
+                      <td className="px-5 py-3 font-mono text-[11.5px] text-[var(--teal)]">{s.id}</td>
+                      <td className="px-5 py-3 text-[var(--ink)] line-clamp-1 max-w-md">{s.title}</td>
+                      <td className="px-5 py-3"><span className={`text-[11.5px] px-2 py-0.5 rounded ${rec.color}`}>{rec.label}</span></td>
+                      <td className="px-5 py-3 font-mono text-[11.5px] text-[var(--ink-soft)]">{me.date}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  REVIEWER REVIEW FORM
+// ─────────────────────────────────────────────────────────────
+function ReviewForm({ sub, onBack, onSubmitReview }) {
+  const [recommendation, setRecommendation] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const checklist = [
+    { label: "ความสำคัญและความใหม่ของปัญหาวิจัย (Significance & Innovation)", weight: 1 },
+    { label: "ความเหมาะสมของระเบียบวิธีวิจัย (Methodology)", weight: 1 },
+    { label: "การประเมินความเสี่ยง-ประโยชน์ (Risk-Benefit Analysis)", weight: 1 },
+    { label: "กระบวนการขอความยินยอม (Informed Consent Process)", weight: 1 },
+    { label: "การคุ้มครองกลุ่มเปราะบาง (Vulnerable Population Protection)", weight: 1 },
+    { label: "ความเป็นส่วนตัวและการจัดการข้อมูล (Privacy & Data Management)", weight: 1 },
+    { label: "ความเหมาะสมของผู้วิจัยและทรัพยากร (Investigator & Resources)", weight: 1 },
+    { label: "การรายงานเหตุการณ์ไม่พึงประสงค์ (AE Reporting Plan)", weight: 1 },
+  ];
+
+  return (
+    <div className="space-y-6 animate-slide">
+      <button onClick={onBack} className="text-[12.5px] text-[var(--ink-mute)] hover:text-[var(--teal)] inline-flex items-center gap-1">
+        <ArrowLeft size={14} /> กลับไป Dashboard
+      </button>
+
+      <Card>
+        <div className="font-mono text-[12px] font-semibold text-[var(--teal)]">{sub.id}</div>
+        <h1 className="font-display text-[24px] font-medium text-[var(--ink)] mt-1 leading-snug">{sub.title}</h1>
+        <p className="text-[12.5px] italic text-[var(--ink-mute)] mt-1">{sub.titleEn}</p>
+        <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-[12.5px]">
+          <div><span className="text-[var(--ink-mute)]">PI:</span> <span className="font-medium">{sub.pi}</span></div>
+          <div><span className="text-[var(--ink-mute)]">ประเภท:</span> <span className="font-medium">{sub.type}</span></div>
+          <div><span className="text-[var(--ink-mute)]">ความเสี่ยง:</span> <span className="font-medium">{sub.risk}</span></div>
+          <div><span className="text-[var(--ink-mute)]">กำหนดส่ง:</span> <span className="font-mono font-medium text-[var(--terra)]">2569-04-29</span></div>
+        </div>
+      </Card>
+
+      <Card>
+        <h3 className="font-display text-[19px] font-medium mb-3">เอกสารโครงการ</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {sub.documents.map((d, i) => (
+            <button key={i} className="flex items-center gap-2 p-3 rounded-md border border-[var(--line)] hover:border-[var(--teal)]/30 hover:bg-[var(--paper-deep)]/40 transition text-left">
+              <FileText size={16} className="text-[var(--terra)]" />
+              <div className="flex-1 min-w-0">
+                <div className="text-[12.5px] font-medium text-[var(--ink)] truncate">{d.name}</div>
+                <div className="text-[10.5px] text-[var(--ink-mute)]">{d.type} · {d.size}</div>
+              </div>
+              <Download size={14} className="text-[var(--ink-mute)]" />
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-[var(--gold)]">Review Form</div>
+        <h3 className="font-display text-[20px] font-medium mt-0.5 mb-5">แบบประเมินจริยธรรมการวิจัย</h3>
+
+        <div className="space-y-4">
+          {checklist.map((c, i) => (
+            <div key={i} className="pb-4 border-b border-[var(--line-soft)] last:border-0 last:pb-0">
+              <div className="text-[13px] font-medium text-[var(--ink)] mb-2">{i + 1}. {c.label}</div>
+              <div className="flex items-center gap-1.5 mb-2">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button key={n} className="h-8 w-8 rounded border border-[var(--line)] hover:bg-[var(--teal-soft)]/40 hover:border-[var(--teal)]/40 text-[12px] font-medium transition">{n}</button>
+                ))}
+                <span className="text-[10.5px] text-[var(--ink-mute)] ml-2">1 = ไม่เหมาะสม · 5 = เหมาะสมมาก</span>
+              </div>
+              <Textarea rows={2} placeholder="ความเห็น / ข้อเสนอแนะ (ถ้ามี)" />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-[var(--line)]">
+          <div className="text-[13px] font-semibold text-[var(--ink)] mb-3">คำแนะนำโดยรวม (Overall Recommendation)</div>
+          <div className="grid grid-cols-2 gap-2.5">
+            {Object.entries(REC_META).map(([key, m]) => (
+              <button key={key} onClick={() => setRecommendation(key)}
+                className={`p-3.5 rounded-md border-2 text-left transition ${recommendation === key ? "border-[var(--teal)] bg-[var(--teal-soft)]/40" : "border-[var(--line)] hover:border-[var(--teal)]/30"}`}>
+                <div className={`inline-block text-[11px] px-2 py-0.5 rounded ${m.color} mb-1.5`}>{m.label}</div>
+                <div className="text-[11px] text-[var(--ink-mute)] leading-snug">
+                  {key === "approve" && "อนุมัติได้ทันที ไม่ต้องแก้ไข"}
+                  {key === "approve_with_revisions" && "อนุมัติได้ แต่ต้องแก้ไขเล็กน้อย (ไม่ต้องเข้าที่ประชุม)"}
+                  {key === "major_revisions" && "ต้องแก้ไขสาระสำคัญ และพิจารณาใหม่"}
+                  {key === "reject" && "ไม่ผ่านการพิจารณา มีปัญหาด้านจริยธรรม"}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-5">
+            <Field label="ความเห็นโดยรวมและข้อเสนอแนะถึงผู้วิจัย">
+              <Textarea rows={5} placeholder="ความเห็นนี้จะถูกส่งให้ผู้วิจัยแบบ blinded" />
+            </Field>
+          </div>
+
+          <div className="mt-5">
+            <Field label="ความเห็นถึงประธาน IRB (ไม่ส่งให้ผู้วิจัย)" sublabel="confidential">
+              <Textarea rows={3} placeholder="ความเห็นเฉพาะคณะกรรมการ" />
+            </Field>
+          </div>
+
+          <div className="mt-6 flex items-center justify-between gap-3">
+            <Btn variant="outline">บันทึกฉบับร่าง</Btn>
+            <div className="flex gap-2">
+              <Btn variant="ghost" onClick={onBack}>ยกเลิก</Btn>
+              <Btn variant="primary" icon={Send} disabled={!recommendation}
+                onClick={() => { onSubmitReview(); setSubmitted(true); }}>ส่งความเห็น</Btn>
+            </div>
+          </div>
+
+          {submitted && (
+            <div className="mt-5 p-4 rounded-md bg-[var(--moss-soft)]/40 border border-[var(--moss)]/30 flex items-center gap-3 animate-slide">
+              <CheckCircle2 size={20} className="text-[var(--moss)] flex-shrink-0" />
+              <div className="text-[12.5px]">
+                <div className="font-semibold text-[var(--moss)]">ส่งความเห็นเรียบร้อย</div>
+                <div className="text-[var(--ink-soft)]">ระบบแจ้ง email ถึงเลขานุการ IRB แล้ว — ขอบพระคุณท่านครับ</div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CHAIR VIEW
+// ─────────────────────────────────────────────────────────────
+function ChairView({ submissions }) {
+  const stats = {
+    total: submissions.length,
+    approved: submissions.filter((s) => s.status === "approved").length,
+    pending: submissions.filter((s) => ["under_review", "awaiting_assignment", "screening"].includes(s.status)).length,
+    avgDays: 28,
+  };
+
+  const decisionQueue = submissions.filter((s) =>
+    s.status === "under_review" && s.reviewers.length > 0 &&
+    s.reviewers.every((r) => r.status === "completed")
+  );
+
+  return (
+    <div className="space-y-7 animate-slide">
+      <div>
+        <div className="text-[10.5px] font-semibold tracking-[0.2em] uppercase text-[var(--gold)]">Chair · Executive Dashboard</div>
+        <h1 className="font-display text-[36px] font-medium text-[var(--ink)] leading-tight mt-1">
+          ภาพรวมคณะกรรมการ IRB
+        </h1>
+        <p className="text-[13.5px] text-[var(--ink-soft)] mt-2">
+          กำกับดูแลภาพรวมการพิจารณา ออกเลขที่รับรอง และอนุมัติขั้นสุดท้ายเมื่อกรรมการครบทุกท่าน
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard label="โครงการปีนี้" value={stats.total} sublabel="ปีงบประมาณ 2569" icon={BookOpen} color="teal" />
+        <StatCard label="อนุมัติแล้ว" value={stats.approved} sublabel="92% rate" icon={Award} color="moss" trend="+12% YoY" />
+        <StatCard label="กำลังพิจารณา" value={stats.pending} sublabel="ในกระบวนการ" icon={Activity} color="gold" />
+        <StatCard label="ระยะเวลาเฉลี่ย" value={`${stats.avgDays} วัน`} sublabel="จากส่ง→อนุมัติ" icon={Clock} color="plum" />
+      </div>
+
+      <div>
+        <SectionTitle eyebrow="Final Decision Queue" title="รอการตัดสินขั้นสุดท้าย" />
+        {decisionQueue.length === 0 && (
+          <Card><div className="text-center py-8 text-[var(--ink-mute)] text-[13px]">ไม่มีโครงการที่กรรมการพิจารณาครบ — รอกรรมการส่งงาน</div></Card>
+        )}
+        {decisionQueue.map((s) => (
+          <Card key={s.id} className="mb-3">
+            <div className="flex items-start gap-4">
+              <div className="flex-1">
+                <div className="font-mono text-[11.5px] font-semibold text-[var(--teal)] mb-1">{s.id}</div>
+                <div className="font-medium text-[14px] text-[var(--ink)]">{s.title}</div>
+                <div className="text-[11.5px] text-[var(--ink-mute)] mt-1">{s.pi} · {s.dept}</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {s.reviewers.map((r, i) => (
+                    <div key={i} className={`text-[11px] px-2 py-1 rounded ${REC_META[r.recommendation]?.color}`}>
+                      Reviewer {String.fromCharCode(65 + i)}: {REC_META[r.recommendation]?.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 flex-shrink-0">
+                <Btn size="sm" variant="primary" icon={Award}>อนุมัติ</Btn>
+                <Btn size="sm" variant="outline" icon={Edit3}>ขอแก้ไข</Btn>
+                <Btn size="sm" variant="ghost" icon={XCircle}>ไม่อนุมัติ</Btn>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-12 gap-5">
+        <Card className="col-span-12 lg:col-span-7">
+          <h3 className="font-display text-[18px] font-medium mb-4">การกระจายโครงการตามภาควิชา</h3>
+          <div className="space-y-3">
+            {[
+              { dept: "การพยาบาลมารดาและทารก", count: 12, pct: 32 },
+              { dept: "การพยาบาลครอบครัวและชุมชน", count: 9, pct: 24 },
+              { dept: "การพยาบาลผู้ใหญ่", count: 7, pct: 18 },
+              { dept: "การพยาบาลเด็ก", count: 5, pct: 13 },
+              { dept: "การพยาบาลสุขภาพจิต", count: 5, pct: 13 },
+            ].map((d) => (
+              <div key={d.dept}>
+                <div className="flex items-center justify-between text-[12px] mb-1">
+                  <span className="text-[var(--ink)] font-medium">{d.dept}</span>
+                  <span className="text-[var(--ink-mute)] font-mono">{d.count} โครงการ</span>
+                </div>
+                <div className="h-2 bg-[var(--paper-deep)] rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-[var(--teal)] to-[var(--gold)] rounded-full" style={{ width: `${d.pct}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="col-span-12 lg:col-span-5">
+          <h3 className="font-display text-[18px] font-medium mb-4">ประเภทการพิจารณา</h3>
+          <div className="space-y-4">
+            {[
+              { label: "Full Board Review", count: 22, color: "var(--plum)" },
+              { label: "Expedited Review", count: 14, color: "var(--moss)" },
+              { label: "Exempt Review", count: 2, color: "var(--gold)" },
+            ].map((d, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-md flex items-center justify-center font-display text-[20px] font-semibold text-white" style={{ background: d.color }}>
+                  {d.count}
+                </div>
+                <div className="flex-1">
+                  <div className="text-[13px] font-medium text-[var(--ink)]">{d.label}</div>
+                  <div className="text-[11px] text-[var(--ink-mute)]">{Math.round((d.count / 38) * 100)}% ของทั้งหมด</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 pt-4 border-t border-[var(--line-soft)] text-center">
+            <Btn size="sm" variant="outline" icon={BarChart3}>ดู Annual Report</Btn>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  EMAIL DRAWER
+// ─────────────────────────────────────────────────────────────
+function EmailDrawer({ open, onClose, emails, currentUser }) {
+  const [selected, setSelected] = useState(emails[0]?.id);
+  const filtered = emails;
+  const active = filtered.find((e) => e.id === selected) || filtered[0];
+
+  return (
+    <div className={`fixed inset-0 z-50 ${open ? "pointer-events-auto" : "pointer-events-none"}`}>
+      <div className={`absolute inset-0 bg-black/30 transition-opacity ${open ? "opacity-100" : "opacity-0"}`} onClick={onClose} />
+      <div className={`absolute right-0 top-0 bottom-0 w-full max-w-3xl bg-[var(--paper)] shadow-2xl transition-transform ${open ? "translate-x-0" : "translate-x-full"} flex`}>
+        {/* Email list */}
+        <div className="w-72 border-r border-[var(--line)] bg-white flex flex-col">
+          <div className="px-4 py-3.5 border-b border-[var(--line)] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Mail size={16} className="text-[var(--teal)]" />
+              <span className="font-display text-[15px] font-semibold">Email Log</span>
+            </div>
+            <Badge color="teal">{filtered.length}</Badge>
+          </div>
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
+            {filtered.map((e) => (
+              <button key={e.id} onClick={() => setSelected(e.id)}
+                className={`w-full text-left px-4 py-3 border-b border-[var(--line-soft)] hover:bg-[var(--paper-deep)]/40 transition ${selected === e.id ? "bg-[var(--teal-soft)]/40" : ""}`}>
+                <div className="flex items-center gap-2 mb-1">
+                  {e.type === "submission_received" && <Check size={12} className="text-[var(--moss)]" />}
+                  {e.type === "reviewer_assigned" && <UserPlus size={12} className="text-[var(--gold)]" />}
+                  {e.type === "review_completed" && <ClipboardCheck size={12} className="text-[var(--plum)]" />}
+                  {e.type === "approved" && <Award size={12} className="text-[var(--moss)]" />}
+                  {e.type === "revision_required" && <AlertTriangle size={12} className="text-[var(--terra)]" />}
+                  <span className="text-[10.5px] font-mono text-[var(--ink-mute)]">{e.ts.split(" ")[0]}</span>
+                </div>
+                <div className="text-[12px] font-semibold text-[var(--ink)] line-clamp-1">{e.subject}</div>
+                <div className="text-[10.5px] text-[var(--ink-mute)] mt-0.5 truncate">→ {e.to}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Email body */}
+        <div className="flex-1 flex flex-col">
+          <div className="px-5 py-3.5 border-b border-[var(--line)] flex items-center justify-between bg-white">
+            <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[var(--gold)]">Email Tracking</div>
+            <button onClick={onClose} className="p-1 rounded hover:bg-[var(--paper-deep)]"><X size={18} /></button>
+          </div>
+          {active && (
+            <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
+              <div className="bg-white rounded-lg border border-[var(--line)] shadow-paper p-6 max-w-2xl">
+                <h2 className="font-display text-[19px] font-medium text-[var(--ink)] leading-snug">{active.subject}</h2>
+                <div className="mt-4 space-y-1.5 text-[12.5px] pb-4 border-b border-[var(--line-soft)]">
+                  <div className="flex gap-2"><span className="text-[var(--ink-mute)] w-12">From:</span> <span className="font-mono">{active.from}</span></div>
+                  <div className="flex gap-2"><span className="text-[var(--ink-mute)] w-12">To:</span> <span className="font-mono">{active.to}</span></div>
+                  {active.cc && <div className="flex gap-2"><span className="text-[var(--ink-mute)] w-12">Cc:</span> <span className="font-mono">{active.cc}</span></div>}
+                  <div className="flex gap-2"><span className="text-[var(--ink-mute)] w-12">Date:</span> <span className="font-mono">{active.ts}</span></div>
+                </div>
+                <pre className="mt-4 whitespace-pre-wrap font-body text-[13px] text-[var(--ink)] leading-relaxed">{active.body}</pre>
+                <div className="mt-6 pt-4 border-t border-[var(--line-soft)] flex items-center justify-between">
+                  <div className="text-[11px] text-[var(--ink-mute)]">
+                    <Hash size={11} className="inline mr-1" /> {active.submissionId}
+                  </div>
+                  <div className="flex gap-2">
+                    <Btn size="sm" variant="ghost" icon={Send}>ส่งซ้ำ</Btn>
+                    <Btn size="sm" variant="outline" icon={Eye}>ดูในระบบ</Btn>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 max-w-2xl text-[11.5px] text-[var(--ink-mute)] flex items-center gap-2">
+                <ShieldCheck size={13} />
+                ทุก email ถูกบันทึกใน audit trail · ตรวจสอบได้ตามมาตรฐาน ICH-GCP & PDPA
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+//  MAIN APP
+// ─────────────────────────────────────────────────────────────
+const USERS = {
+  researcher: {
+    role: "researcher", name: "ผศ.ดร.ทิพย์รัตน์ อุดเมืองเพีย", firstName: "ทิพย์รัตน์", initials: "ทร",
+    subtitle: "อาจารย์ · ภาควิชาการพยาบาลมารดาและทารก",
+    email: "tipparat@bcnkk.ac.th", dept: "ภาควิชาการพยาบาลมารดาและทารก",
+  },
+  coordinator: {
+    role: "coordinator", name: "นางสาวกัลยา เลขานุการ", firstName: "กัลยา", initials: "กล",
+    subtitle: "เลขานุการ IRB · สำนักงาน",
+    email: "irb-secretary@bcnkk.ac.th",
+  },
+  reviewer: {
+    role: "reviewer", name: "รศ.ดร.สมศรี วิจัยดี", firstName: "สมศรี", initials: "สศ",
+    subtitle: "กรรมการ IRB · ภาควิชาการพยาบาลมารดาและทารก",
+    email: "somsri@bcnkk.ac.th", reviewerId: "R01",
+  },
+  chair: {
+    role: "chair", name: "ศ.ดร.ประชา ประธาน", firstName: "ประชา", initials: "ปธ",
+    subtitle: "ประธานคณะกรรมการ IRB",
+    email: "chair@bcnkk.ac.th",
+  },
+};
+
+function App() {
+  const [role, setRole] = useState("researcher");
+  const [view, setView] = useState({ name: "list", id: null });
+  const [showEmails, setShowEmails] = useState(false);
+  const [submissions, setSubmissions] = useState(seedSubmissions);
+  const [emails, setEmails] = useState(seedEmails);
+
+  // Inject fonts
+  useEffect(() => {
+    const styleEl = document.createElement("style");
+    styleEl.innerHTML = css;
+    document.head.appendChild(styleEl);
+    return () => document.head.removeChild(styleEl);
+  }, []);
+
+  // Reset view when role changes
+  useEffect(() => { setView({ name: "list", id: null }); }, [role]);
+
+  const currentUser = USERS[role];
+
+  const handleAssign = (subId, reviewerIds) => {
+    setSubmissions((prev) => prev.map((s) => {
+      if (s.id !== subId) return s;
+      return {
+        ...s,
+        status: "under_review",
+        reviewers: reviewerIds.map((id, i) => ({
+          id, status: i === 0 ? "in_progress" : "pending", recommendation: null, date: null,
+        })),
+        timeline: [...s.timeline, { date: "2569-05-07", event: `Assigned ให้กรรมการ ${reviewerIds.length} ท่าน`, actor: USERS.coordinator.name, icon: "users" }],
+      };
+    }));
+    // Add fake email
+    setEmails((prev) => [
+      {
+        id: prev.length + 1, ts: "2569-05-07 10:30",
+        from: "irb@bcnkk.ac.th", to: reviewerIds.map((id) => seedReviewers.find((r) => r.id === id)?.email).join(", "),
+        subject: `[BCNKK-IRB] 📋 มอบหมายงานพิจารณา — ${subId}`,
+        type: "reviewer_assigned", submissionId: subId,
+        body: `เรียนกรรมการที่ได้รับมอบหมาย\n\nคณะกรรมการ IRB ขอมอบหมายให้ท่านพิจารณาโครงการ ${subId}\nกำหนดส่งความเห็นภายใน 14 วัน\n\nกรุณา login เข้าสู่ระบบเพื่อดาวน์โหลดเอกสาร`,
+      },
+      ...prev,
+    ]);
+  };
+
+  const handleSubmitReview = () => {
+    setEmails((prev) => [
+      {
+        id: prev.length + 1, ts: "2569-05-07 14:15",
+        from: "irb@bcnkk.ac.th", to: "irb-secretary@bcnkk.ac.th",
+        subject: `[BCNKK-IRB] ✍️ กรรมการส่งความเห็นแล้ว`,
+        type: "review_completed", submissionId: "BCNKK-IRB-2569-014",
+        body: `กรรมการได้ส่งความเห็นเรียบร้อยแล้ว — รอกรรมการอีกท่านดำเนินการ`,
+      },
+      ...prev,
+    ]);
+  };
+
+  const handleNewSubmission = () => {
+    setEmails((prev) => [
+      {
+        id: prev.length + 1, ts: "2569-05-07 15:00",
+        from: "irb@bcnkk.ac.th", to: currentUser.email,
+        subject: "[BCNKK-IRB] ✓ ได้รับโครงการใหม่แล้ว",
+        type: "submission_received", submissionId: "BCNKK-IRB-2569-NEW",
+        body: `เรียน ${currentUser.name}\n\nคณะกรรมการ IRB ได้รับโครงการของท่านแล้ว — เลขที่จะแจ้งหลังคัดกรองภายใน 1-2 วันทำการ`,
+      },
+      ...prev,
+    ]);
+    setView({ name: "list", id: null });
+  };
+
+  // Render the right view based on role + state
+  let content;
+  if (role === "researcher") {
+    if (view.name === "new") content = <NewSubmissionForm currentUser={currentUser} onCancel={() => setView({ name: "list", id: null })} onSubmit={handleNewSubmission} />;
+    else if (view.name === "detail") content = <SubmissionDetail sub={submissions.find((s) => s.id === view.id)} onBack={() => setView({ name: "list", id: null })} reviewers={seedReviewers} />;
+    else content = <ResearcherView submissions={submissions} onOpen={(id) => setView({ name: "detail", id })} onNew={() => setView({ name: "new", id: null })} currentUser={currentUser} />;
+  } else if (role === "coordinator") {
+    if (view.name === "detail") content = <CoordinatorSubmissionDetail sub={submissions.find((s) => s.id === view.id)} onBack={() => setView({ name: "list", id: null })} onAssign={handleAssign} reviewers={seedReviewers} />;
+    else content = <CoordinatorView submissions={submissions} onOpen={(id) => setView({ name: "detail", id })} currentUser={currentUser} />;
+  } else if (role === "reviewer") {
+    if (view.name === "detail") content = <ReviewForm sub={submissions.find((s) => s.id === view.id)} onBack={() => setView({ name: "list", id: null })} onSubmitReview={handleSubmitReview} />;
+    else content = <ReviewerView submissions={submissions} onOpen={(id) => setView({ name: "detail", id })} currentUser={currentUser} />;
+  } else if (role === "chair") {
+    content = <ChairView submissions={submissions} />;
+  }
+
+  return (
+    <div className="font-body text-[var(--ink)]">
+      <AppShell role={role} setRole={setRole} currentUser={currentUser}
+        onShowEmails={() => setShowEmails(true)} emailCount={emails.length}>
+        {content}
+      </AppShell>
+      <EmailDrawer open={showEmails} onClose={() => setShowEmails(false)} emails={emails} currentUser={currentUser} />
+    </div>
+  );
+}
+
+
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);
+
+
+// Hide boot screen once mounted
+const boot = document.getElementById('boot');
+if (boot) {
+  setTimeout(() => {
+    boot.classList.add('fade');
+    setTimeout(() => boot.remove(), 500);
+  }, 100);
+}
+  </script>
+</body>
+</html>
